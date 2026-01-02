@@ -1,0 +1,588 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Đăng Ký Thuê EA</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .header {
+            text-align: center;
+            color: white;
+            margin-bottom: 40px;
+            animation: fadeInDown 0.8s;
+        }
+
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            font-size: 1.2em;
+            opacity: 0.9;
+        }
+
+        .packages {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            margin-bottom: 40px;
+            animation: fadeInUp 0.8s;
+        }
+
+        .package-card {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            transition: transform 0.3s;
+            cursor: pointer;
+            border: 3px solid transparent;
+        }
+
+        .package-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .package-card.selected {
+            border-color: #667eea;
+            box-shadow: 0 10px 40px rgba(102, 126, 234, 0.4);
+        }
+
+        .package-card .badge {
+            display: inline-block;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-weight: bold;
+            margin-bottom: 15px;
+        }
+
+        .package-card.standard .badge {
+            background: #ffc107;
+            color: #333;
+        }
+
+        .package-card.premium .badge {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .package-card .price {
+            font-size: 3em;
+            font-weight: bold;
+            color: #667eea;
+            margin: 20px 0;
+        }
+
+        .package-card .features {
+            list-style: none;
+            margin: 20px 0;
+        }
+
+        .package-card .features li {
+            padding: 10px 0;
+            border-bottom: 1px solid #f0f0f0;
+        }
+
+        .package-card .features li:before {
+            content: "✓ ";
+            color: #28a745;
+            font-weight: bold;
+            margin-right: 10px;
+        }
+
+        .main-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            animation: fadeInUp 0.8s;
+        }
+
+        .info-section {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+
+        .info-section h2 {
+            color: #667eea;
+            margin-bottom: 20px;
+            font-size: 1.8em;
+        }
+
+        .feature {
+            display: flex;
+            align-items: start;
+            margin-bottom: 20px;
+        }
+
+        .feature-icon {
+            font-size: 2em;
+            margin-right: 15px;
+        }
+
+        .feature-content h3 {
+            color: #333;
+            margin-bottom: 5px;
+        }
+
+        .feature-content p {
+            color: #666;
+            line-height: 1.6;
+        }
+
+        .form-section {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+
+        .form-section h2 {
+            color: #667eea;
+            margin-bottom: 25px;
+            text-align: center;
+            font-size: 1.8em;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: #333;
+            font-weight: 600;
+        }
+
+        .form-group input,
+        .form-group select {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 1em;
+            transition: all 0.3s;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        .form-group small {
+            display: block;
+            margin-top: 5px;
+            color: #999;
+        }
+
+        .form-group.hidden {
+            display: none;
+        }
+
+        .submit-btn {
+            width: 100%;
+            padding: 15px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 1.1em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .submit-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px rgba(102, 126, 234, 0.4);
+        }
+
+        .submit-btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .alert {
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            display: none;
+        }
+
+        .alert.success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+
+        .alert.error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+
+        .alert.show {
+            display: block;
+            animation: slideIn 0.3s;
+        }
+
+        .contract-box {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px 0;
+            border-left: 4px solid #667eea;
+        }
+
+        .contract-box h4 {
+            color: #667eea;
+            margin-bottom: 10px;
+        }
+
+        .checkbox-group {
+            display: flex;
+            align-items: start;
+            margin: 15px 0;
+        }
+
+        .checkbox-group input[type="checkbox"] {
+            width: auto;
+            margin-right: 10px;
+            margin-top: 3px;
+        }
+
+        .checkbox-group label {
+            margin: 0;
+            font-weight: normal;
+        }
+
+        @keyframes fadeInDown {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateX(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        @media (max-width: 768px) {
+            .packages,
+            .main-content {
+                grid-template-columns: 1fr;
+            }
+
+            .header h1 {
+                font-size: 1.8em;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🚀 EA Trading System</h1>
+            <p>Đăng ký ngay để bắt đầu giao dịch tự động</p>
+        </div>
+
+        <!-- Package Selection -->
+        <div class="packages">
+            <div class="package-card standard" onclick="selectPackage('STANDARD')">
+                <div class="badge">GÓI TIÊU CHUẨN</div>
+                <div class="price">25%</div>
+                <p style="color: #666; margin-bottom: 20px;">Phí trên lợi nhuận</p>
+                <ul class="features">
+                    <li>Không cần Investor Password</li>
+                    <li>Bảo mật tuyệt đối</li>
+                    <li>Không can thiệp tài khoản</li>
+                    <li>Miễn phí khi lỗ</li>
+                    <li>Hỗ trợ 24/7</li>
+                </ul>
+            </div>
+
+            <div class="package-card premium" onclick="selectPackage('PREMIUM')">
+                <div class="badge">GÓI ƯU ĐÃI ⭐</div>
+                <div class="price">20%</div>
+                <p style="color: #666; margin-bottom: 20px;">Phí trên lợi nhuận</p>
+                <ul class="features">
+                    <li>Cần Investor Password (chỉ xem)</li>
+                    <li>Tiết kiệm 5% phí</li>
+                    <li>Theo dõi chính xác hơn</li>
+                    <li>Miễn phí khi lỗ</li>
+                    <li>Hỗ trợ ưu tiên VIP</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="main-content">
+            <!-- Info Section -->
+            <div class="info-section">
+                <h2>✨ Tính Năng Nổi Bật</h2>
+                
+                <div class="feature">
+                    <div class="feature-icon">🤖</div>
+                    <div class="feature-content">
+                        <h3>Giao Dịch Tự Động 24/7</h3>
+                        <p>EA hoạt động liên tục, không cần can thiệp thủ công</p>
+                    </div>
+                </div>
+
+                <div class="feature">
+                    <div class="feature-icon">📊</div>
+                    <div class="feature-content">
+                        <h3>Quản Lý Rủi Ro Thông Minh</h3>
+                        <p>Stop Loss, Take Profit và Trailing Stop tích hợp</p>
+                    </div>
+                </div>
+
+                <div class="feature">
+                    <div class="feature-icon">💰</div>
+                    <div class="feature-content">
+                        <h3>Phí Công Bằng</h3>
+                        <p>Chỉ trả phí khi có lợi nhuận. Lỗ = Miễn Phí 100%</p>
+                    </div>
+                </div>
+
+                <div class="feature">
+                    <div class="feature-icon">🔒</div>
+                    <div class="feature-content">
+                        <h3>An Toàn Tài Khoản</h3>
+                        <p>Bạn tự quản lý, EA chỉ đọc dữ liệu - KHÔNG rút tiền</p>
+                    </div>
+                </div>
+
+                <div class="contract-box">
+                    <h4>📄 Hợp Đồng Điện Tử</h4>
+                    <p>Hợp đồng sử dụng phần mềm tuân thủ pháp luật VN</p>
+                    <ul style="margin-left: 20px; margin-top: 10px; color: #666;">
+                        <li>✅ Không phải hợp đồng ủy thác giao dịch</li>
+                        <li>✅ Không quản lý tài khoản đối phương</li>
+                        <li>✅ Rủi ro do khách hàng tự chịu</li>
+                        <li>✅ Có giá trị pháp lý</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Form Section -->
+            <div class="form-section">
+                <h2>📝 Đăng Ký Ngay</h2>
+
+                <div id="alert" class="alert"></div>
+
+                <form id="registrationForm">
+                    <input type="hidden" id="packageType" name="packageType" value="STANDARD">
+
+                    <div class="form-group">
+                        <label for="name">Họ và Tên *</label>
+                        <input type="text" id="name" name="name" required 
+                               placeholder="Nguyễn Văn A">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="email">Email *</label>
+                        <input type="email" id="email" name="email" required 
+                               placeholder="email@example.com">
+                        <small>License Key sẽ được gửi về email này</small>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="phone">Số Điện Thoại *</label>
+                        <input type="tel" id="phone" name="phone" required 
+                               placeholder="0912345678">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="accountType">Loại Tài Khoản MT5 *</label>
+                        <select id="accountType" name="accountType" required>
+                            <option value="">-- Chọn loại tài khoản --</option>
+                            <option value="USD">Tài khoản USD (Standard)</option>
+                            <option value="CENT">Tài khoản Cent</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="mt5Account">Số Tài Khoản MT5 (Tùy chọn)</label>
+                        <input type="text" id="mt5Account" name="mt5Account" 
+                               placeholder="123456789">
+                        <small>Có thể cập nhật sau</small>
+                    </div>
+
+                    <div class="form-group hidden" id="passviewGroup">
+                        <label for="investorPassword">Investor Password (Passview) *</label>
+                        <input type="text" id="investorPassword" name="investorPassword" 
+                               placeholder="Nhập Investor Password của MT5">
+                        <small style="color: #dc3545;">Chỉ dùng để XEM, không giao dịch, không rút tiền</small>
+                    </div>
+
+                    <div class="checkbox-group">
+                        <input type="checkbox" id="contractAgree" name="contractAgree" required>
+                        <label for="contractAgree">
+                            Tôi đã đọc và đồng ý với 
+                            <a href="https://forms.gle/DWRiuUvDX1z6csff6" style="color: #667eea;" onclick="alert('Hợp đồng sẽ được gửi qua email sau khi đăng ký'); return false;">
+                                Hợp đồng sử dụng phần mềm
+                            </a>
+                        </label>
+                    </div>
+
+                    <button type="submit" class="submit-btn" id="submitBtn">
+                        🚀 Đăng Ký Miễn Phí
+                    </button>
+                </form>
+
+                <p style="text-align: center; margin-top: 20px; color: #666; font-size: 0.9em;">
+                    🔒 Thông tin của bạn được bảo mật tuyệt đối
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxz8PAJw_KJs5k9TWK46o_1LWp9RPtZ_Xvzp3Dp-BREmpFKoLkUF_545F4yyHJq8T-pBA/exec';
+
+        let selectedPackage = 'STANDARD';
+
+        function selectPackage(packageType) {
+            // Remove selected class from all cards
+            document.querySelectorAll('.package-card').forEach(card => {
+                card.classList.remove('selected');
+            });
+
+            // Add selected class to clicked card
+            if(packageType === 'STANDARD') {
+                document.querySelector('.package-card.standard').classList.add('selected');
+                document.getElementById('passviewGroup').classList.add('hidden');
+                document.getElementById('investorPassword').required = false;
+            } else {
+                document.querySelector('.package-card.premium').classList.add('selected');
+                document.getElementById('passviewGroup').classList.remove('hidden');
+                document.getElementById('investorPassword').required = true;
+            }
+
+            selectedPackage = packageType;
+            document.getElementById('packageType').value = packageType;
+        }
+
+        // Select STANDARD by default
+        selectPackage('STANDARD');
+
+        const form = document.getElementById('registrationForm');
+        const alert = document.getElementById('alert');
+        const submitBtn = document.getElementById('submitBtn');
+
+        function showAlert(message, type) {
+            alert.textContent = message;
+            alert.className = `alert ${type} show`;
+            setTimeout(() => {
+                alert.classList.remove('show');
+            }, 5000);
+        }
+
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            // Validate passview for PREMIUM
+            if(selectedPackage === 'PREMIUM' && !document.getElementById('investorPassword').value) {
+                showAlert('❌ Gói Ưu Đãi yêu cầu Investor Password', 'error');
+                return;
+            }
+
+            submitBtn.disabled = true;
+            submitBtn.textContent = '⏳ Đang xử lý...';
+
+            const formData = {
+                action: 'register',
+                name: document.getElementById('name').value,
+                email: document.getElementById('email').value,
+                phone: document.getElementById('phone').value,
+                account_type: document.getElementById('accountType').value,
+                mt5_account: document.getElementById('mt5Account').value,
+                package: selectedPackage,
+                investor_password: document.getElementById('investorPassword').value,
+                contract_agreed: document.getElementById('contractAgree').checked
+            };
+
+            try {
+                const response = await fetch(SCRIPT_URL + '?' + new URLSearchParams(formData));
+                const data = await response.json();
+
+                if (data.success) {
+                    showAlert('✅ ' + data.message, 'success');
+                    form.reset();
+                    selectPackage('STANDARD'); // Reset to default
+                    
+                    setTimeout(() => {
+                        const msg = `
+🎉 Đăng ký thành công!
+
+📦 Gói: ${data.package}
+💰 Phí: ${data.fee_rate}
+
+📧 Vui lòng kiểm tra email để nhận:
+• User ID & License Key
+• Hợp đồng điện tử
+• Hướng dẫn cài đặt EA
+
+⏰ Nếu không thấy email, kiểm tra hộp thư spam.
+                        `.trim();
+                        alert(msg);
+                    }, 1000);
+                } else {
+                    showAlert('❌ ' + (data.message || 'Đăng ký thất bại'), 'error');
+                }
+            } catch (error) {
+                showAlert('❌ Lỗi kết nối: ' + error.message, 'error');
+            } finally {
+                submitBtn.disabled = false;
+                submitBtn.textContent = '🚀 Đăng Ký Miễn Phí';
+            }
+        });
+    </script>
+</body>
+</html>
